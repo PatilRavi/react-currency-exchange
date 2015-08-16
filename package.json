@@ -1,19 +1,27 @@
 {
   "name": "react-currency-exchange",
   "version": "0.0.1",
+  "private": true,
   "description": "A simple currency exchange build with react.js",
   "author": "Shahrul Nizam <hottincup@gmail.com>",
-  "license" : "GPL-2.0",
+  "license": "GPL-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/syarul/react-currency-exchange"
   },
-  "dependencies": {
-    "gulp": "^3.5.6"
-  },
   "devDependencies": {
     "browser-sync": "^2.8.2",
     "gulp": "^3.9.0",
-    "gulp-util": "^2.2.14"
+    "gulp-concat": "^2.6.0",
+    "gulp-esformatter": "^4.0.0",
+    "gulp-file": "^0.2.0",
+    "gulp-html-replace": "^1.5.1",
+    "gulp-minify-css": "^1.2.0",
+    "gulp-react": "^3.0.1",
+    "gulp-uglify": "^1.2.0",
+    "gulp-util": "3.0.6",
+    "jquery": "^2.1.4",
+    "react": "^0.13.3",
+    "react-tools": "^0.13.3"
   }
 }
