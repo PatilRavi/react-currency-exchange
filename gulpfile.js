@@ -1,14 +1,14 @@
-var gulp        = require('gulp'),
-	browserSync = require('browser-sync').create(),
-	reload      = browserSync.reload,
-	fs 			= require('fs'),
-	file 		= require('gulp-file'),
-	concat 		= require('gulp-concat'),
-	uglify 		= require('gulp-uglify'),
-	minifyCss 	= require('gulp-minify-css'),
-	htmlreplace = require('gulp-html-replace'),
-	react 		= require('gulp-react'),
-	reactTools 	= require('react-tools');
+var gulp	= require('gulp'),
+    browserSync = require('browser-sync').create(),
+    reload      = browserSync.reload,
+    fs 		= require('fs'),
+    file 	= require('gulp-file'),
+    concat 	= require('gulp-concat'),
+    uglify 	= require('gulp-uglify'),
+    minifyCss 	= require('gulp-minify-css'),
+    htmlreplace = require('gulp-html-replace'),
+    react 	= require('gulp-react'),
+    reactTools 	= require('react-tools');
 // Static server
 gulp.task('browser-sync', function() {
     browserSync.init({
