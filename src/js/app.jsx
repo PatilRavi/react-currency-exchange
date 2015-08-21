@@ -1,3 +1,37 @@
+
+/* jsonp function, (c) Przemek Sobstel 2012, License: MIT, https://github.com/sobstel/jsonp.js */
+var $jsonp = (function(){
+  var that = {};
+
+  that.send = function(src, options) {
+    var options = options || {},
+      callback_name = options.callbackName || 'callback',
+      on_success = options.onSuccess || function(){},
+      on_timeout = options.onTimeout || function(){},
+      timeout = options.timeout || 10;
+
+    var timeout_trigger = window.setTimeout(function(){
+      window[callback_name] = function(){};
+      on_timeout();
+    }, timeout * 1000);
+
+    window[callback_name] = function(data){
+      window.clearTimeout(timeout_trigger);
+      on_success(data);
+    };
+
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = true;
+    script.src = src;
+
+    document.getElementsByTagName('head')[0].appendChild(script);
+  };
+
+  return that;
+})();
+
+
 var pairs = [
   {
     name: "USD/MYR"
@@ -43,21 +77,27 @@ var CurrencyEX = React.createClass( {
   },
   getInfo: function () {
     var x = this.props.selected.name;
-    $.ajax( {
-      url: "https://currency-api.appspot.com/api/" + x + ".jsonp",
-      contentType: "application/json; charset=utf-8",
-      dataType: "jsonp",
-    } ).success( function ( res ) {
-      curData.data = res;
-      var temp = 1 / res.rate;
-      var reverse = temp.toFixed( 7 );
-      this.setState( {
-        rate: res.rate,
-        source: res.source,
-        target: res.target,
-        reverse: reverse
-      } );
-    }.bind( this ) );
+    var uri = "https://currency-api.appspot.com/api/" + x + ".jsonp?callback=handleStuff";
+    $jsonp.send( uri, {
+      callbackName: 'handleStuff',
+      onSuccess: function(json){
+        //console.log('success!!', json);
+        var res = json;
+        curData.data = res;
+        var temp = 1 / res.rate;
+        var reverse = temp.toFixed( 7 );
+        this.setState( {
+          rate: res.rate,
+          source: res.source,
+          target: res.target,
+          reverse: reverse
+        } );
+      }.bind(this),
+      onTimeout: function(){
+        console.log('timeout!');
+      },
+      timeout: 5
+    });
   },
   show: function () {
     this.setState( { listVisible: true } );
