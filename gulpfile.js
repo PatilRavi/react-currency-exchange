@@ -7,7 +7,8 @@ var gulp = require('gulp'),
   minifyCss = require('gulp-minify-css'),
   htmlreplace = require('gulp-html-replace'),
   react = require('gulp-react'),
-  reactTools = require('react-tools');
+  reactTools = require('react-tools'),
+  babel = require('gulp-babel');
 // Static server
 gulp.task('browser-sync', function () {
   browserSync.init({
@@ -32,17 +33,23 @@ gulp.task('init', function () {
 });
 gulp.task('watch', function () {
   gulp.watch('src/index.html').on('change', browserSync.reload);
-  gulp.watch('src/js/app.jsx').on('change', browserSync.reload);
+  gulp.watch('src/js/app.js').on('change', browserSync.reload);
   gulp.watch('src/css/main.css').on('change', browserSync.reload);
 });
 gulp.task('react-tools', function () {
-  var str = fs.readFileSync('src/js/app.jsx').toString();
+  var str = fs.readFileSync('src/js/jsx/app.jsx').toString();
   var output = reactTools.transform(str, 'harmony : false');
   return file('app.min.js', output, {
     src: true
   }).pipe(react())
+    .pipe(babel())
     .pipe(uglify())
     .pipe(gulp.dest('dist'));
+});
+gulp.task('babel', function () {
+  return gulp.src('src/js/jsx/app.jsx')
+        .pipe(babel())
+        .pipe(gulp.dest('src/js'));
 });
 gulp.task('css', function () {
   return gulp.src([
@@ -65,4 +72,4 @@ gulp.task('replace', function () {
     .pipe(gulp.dest('dist'));
 });
 gulp.task('prod', ['react-tools', 'move', 'replace', 'css', 'browser-sync-prod']);
-gulp.task('default', ['init', 'browser-sync', 'watch']);
+gulp.task('default', ['init', 'babel', 'browser-sync', 'watch']);
